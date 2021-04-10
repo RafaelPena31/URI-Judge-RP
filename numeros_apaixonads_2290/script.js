@@ -1,23 +1,51 @@
+console.time("time");
 var input = require("fs").readFileSync("var.txt", "utf8");
 var lines = input.split("\n");
 
-for (var index = 0; index <= lines.length; index++) {
-  var item = lines[index];
-  var numberList = item.split(" ").map((item) => Number(item));
-  if (numberList[0] === 0) {
-    break;
-  }
-  var orderArray = numberList.sort((item1, item2) => item1 - item2);
-  if (index % 2 !== 0) {
-    for (var i = 0; i < orderArray.length; i += 2) {
-      var itemToTest = orderArray.slice(i, i + 2);
-      if (itemToTest[0] !== itemToTest[1]) {
-        if (itemToTest[1] !== undefined) {
-          console.log(itemToTest[0] + " " + itemToTest[1]);
-        } else {
-          console.log(itemToTest[0], itemToTest);
-        }
+let data = [];
+let nData = [];
+
+for (let lineIndex = 1; lineIndex < lines.length; lineIndex += 2) {
+  let item = lines[lineIndex];
+  let numberList = item.split(" ").map((item2) => Number(item2));
+  data.push(numberList);
+}
+
+for (let lineIndexN = 0; lineIndexN < lines.length; lineIndexN += 2) {
+  let item = lines[lineIndexN];
+  let numberList = item.split(" ").map((item2) => Number(item2));
+  nData.push(numberList);
+}
+
+for (let arrIndex = 0; arrIndex < data.length; arrIndex++) {
+  if (nData[arrIndex][0] !== 0) {
+    let arr = data[arrIndex];
+    let cache = [];
+    let arrCache = [];
+    let arrResponse = [];
+    let response = [];
+    arr.forEach((item) => {
+      if (!cache.includes(item)) {
+        cache.push(item);
       }
-    }
+    });
+    cache.forEach((item) => {
+      arr.forEach((arrItem) => {
+        if (arrItem === item) {
+          if (!arrCache.includes(arrItem)) {
+            arrCache = [];
+          }
+          arrCache.push(arrItem);
+        }
+      });
+      arrResponse.push(arrCache);
+    });
+    arrResponse.forEach((arrResponseItem) => {
+      if (arrResponseItem.length % 2 !== 0) {
+        response.push(arrResponseItem[0]);
+      }
+    });
+    let sortedResponse = response.sort((item1, item2) => item1 - item2);
+    console.log(sortedResponse[0], sortedResponse[1]);
   }
 }
